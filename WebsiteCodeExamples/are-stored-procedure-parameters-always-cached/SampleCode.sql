@@ -121,3 +121,24 @@ GO
 EXEC dbo.usp_ParamTest @DisplayName = N'Greg'
 --Doesn't include it in the params
 GO
+
+
+
+--8. Send in parameter, pass it to dynamic SQL
+CREATE OR ALTER PROC dbo.usp_ParamTest
+	@DisplayName NVARCHAR(40)
+AS
+BEGIN
+
+	DECLARE @SQLString NVARCHAR(4000) = 'SELECT	*
+	FROM	TestTable
+	WHERE	TestTable.Value = @DisplayName';
+
+	EXEC sys.sp_executesql @SQLString, N'@DisplayName NVARCHAR(40)', @DisplayName
+END;
+GO
+
+EXEC dbo.usp_ParamTest @DisplayName = N'Greg'
+--Doesn't include it in the params
+GO
+
